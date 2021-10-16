@@ -4,6 +4,7 @@ import numpy as np
 
 class TicTacGame:
     players = {0: {"mrk": "X", "name": "Player_1"}, 1: {"mrk": "O", "name": "Player_2"}}
+    messages = {}
 
     def __init__(self):
         self.field = "\n".join(TEMPLATE)
@@ -15,6 +16,7 @@ class TicTacGame:
 
     def update_board(self):
         self.clear_screen()
+        self.line_ctr = 10
         print(self.field.format(*self.values.ravel()))
 
     def clear_screen(self):
@@ -26,12 +28,12 @@ class TicTacGame:
 
     def start_game_loop(self):
         while True:
-            x, y = self.ask()
+            i, j = self.ask()
 
-            self.values[x, y] = self.players[self.cur_plr]["mrk"]
+            self.values[i, j] = self.players[self.cur_plr]["mrk"]
             self.update_board()
 
-            if self.check_win():
+            if self.check_endgame():
                 break
 
             self.cur_plr = not self.cur_plr
@@ -46,7 +48,6 @@ class TicTacGame:
 
         if len(inp) != 2:
             self.msg = "There should be two indicies"
-            self.line_ctr = 10
             self.update_board()
             return self.ask()
         try:
@@ -54,43 +55,46 @@ class TicTacGame:
 
             if not ((x in (0, 1, 2)) and (y in (0, 1, 2))):
                 self.msg = "Cell index should be 0, 1 or 2"
-                self.line_ctr = 10
                 self.update_board()
                 return self.ask()
         except ValueError:
             self.msg = "Cell index should be int"
-            self.line_ctr = 10
             self.update_board()
             return self.ask()
         if self.values[x, y] != " ":
             self.msg = "Cell is busy"
-            self.line_ctr = 10
             self.update_board()
             return self.ask()
 
-        self.line_ctr = 10
-
         return x, y
 
-    def check_win(self):
-        for i in range(3):
+    def check_endgame(self):
+        mrk = self.players[self.cur_plr]['mrk']
+        rng = list(range(3))
+        d1, d2 = self.values[rng, rng], self.values[rng, rng[::-1]]
+
+        for i in rng:
             row = self.values[i, :]
             line = self.values[:, i]
-            mrk = self.players[self.cur_plr]['mrk']
 
             if (row == mrk).all() or (line == mrk).all():
                 print(f"Player {self.players[self.cur_plr]['name']} wins!")
 
                 return 1
 
-        rng = list(range(3))
-        d1, d2 = self.values[rng, rng], self.values[rng, rng[::-1]]
-
         if (d1 == mrk).all() or (d2 == mrk).all():
             print(f"Player {self.players[self.cur_plr]['name']} wins!")
 
             return 1
 
+        if (self.values.ravel() != " ").all():
+            print(f"Draw!")
 
-t = TicTacGame()
-t.start_game_loop()
+            return 1
+
+        return 0
+
+
+if __name__ == "__main__":
+    t = TicTacGame()
+    t.start_game_loop()
