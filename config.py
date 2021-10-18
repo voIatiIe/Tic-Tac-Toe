@@ -1,11 +1,11 @@
-# tip_row     = "   |   |   "
-tip_row     = "           "
-values_row  = " {} | {} | {} "
-bar_row     = " --|---|-- "
-# bar_row     = "---|---|---"
+'''Configuration file'''
 
-TEMPLATE = [tip_row, values_row, bar_row,
-                     values_row, bar_row,
-                     values_row, tip_row]
+TIP_ROW     = "           "
+VALUES_ROW  = " {} | {} | {} "
+BAR_ROW     = " --|---|-- "
+
+TEMPLATE = [TIP_ROW, VALUES_ROW, BAR_ROW,
+                     VALUES_ROW, BAR_ROW,
+                     VALUES_ROW, TIP_ROW]
 
 GOBACK = "\033[F"
